@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5学堂 - H5course</title>
+	<link rel="stylesheet" href="../css/reset.css">
+	<style>
+		.wrap{
+			width: 700px;
+			margin: 100px auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<canvas id="myCanvas" width="700" height="500"></canvas>
+	</div>
+	<script>
+		var dataCrr = [100, 200, 300, 250, 350, 250, 50, 90];
+		var dataDrr = [200, 100, 200, 350, 250, 150, 60, 80];
+		var c = document.getElementById('myCanvas');
+		var ctx = c.getContext("2d");
+
+
+		LineStatistical(c, ctx, dataCrr, 6, 'pink', 2, 'blue');
+		LineStatistical(c, ctx, dataDrr, 6, 'green', 2, 'black');
+		/*
+		 * 功能：折线统计图
+		 * 参数：ID，2D, 数据，点的大小，点的颜色，线的宽度，线的颜色
+		 * 调用方式: LineStatistical(c, ctx, dataCrr, 6, 'pink', 2, 'blue');
+		*/
+		function LineStatistical(ele, twoD, Arr, pointW, pointC, lineW, lineC) {
+			//把坐标轴反过来
+			var dataBrr = [];
+			for (var i = 0; i < Arr.length; i++) {
+				numB = c.height - Arr[i];
+				dataBrr.push(numB);
+			};
+			//定位X轴
+			var dataArr = [];
+			for (var i = 0; i < dataBrr.length; i++) {
+				var b = parseInt(c.width/dataBrr.length);
+				var num = b * (i + 1) - (b/2);
+				dataArr.push(num);
+			};
+			var cols = dataArr.length;
+			var roes = dataBrr.length;
+			var c_width = ele.width/cols;
+			var c_height = ele.height/roes;
+			twoD.lineWidth = 1;//定义线条的宽度
+			twoD.strokeStyle = "#a0a0a0"
+			twoD.beginPath(); //结束描绘边框
+			//竖线
+			for (var i = 0; i <= cols; i++) {
+				var x = i * c_width;
+				twoD.moveTo(x, 0);//线的起点
+				twoD.lineTo(x, ele.height)//线长
+			};
+			//横线
+			for (var j = 0; j <= roes; j++) {
+				var y = j * c_height;
+				twoD.moveTo(0, y);
+				twoD.lineTo(ele.width, y)
+			};
+			twoD.lineWidth = 1;
+			twoD.strokeStyle = "#a0a0a0";
+			twoD.stroke();
+			//获取数据点的坐标
+			var points = [];
+			for (var i = 0; i < dataArr.length; i++) {
+				var posX = dataArr[i];
+				var posY = dataBrr[i];
+				points.push({'x' : posX, 'y' : posY});
+				twoD.fillText(Arr[i], posX+7, posY + 1 * i);		
+			};
+			twoD.beginPath();
+			twoD.lineWidth = lineW;
+			twoD.strokeStyle = lineC;
+			twoD.moveTo(points[0].x, points[0].y)
+			for (var i = 1; i < points.length; i++) {
+				twoD.lineTo(points[i].x, points[i].y);
+				twoD.stroke();
+			};
+			//遍历每个点，给每个点设置样式
+			for (var i in points) {
+				var p = points[i];
+				twoD.beginPath();
+				twoD.arc(p.x, p.y, pointW, 0, 2*Math.PI);
+				twoD.fillStyle = pointC;
+				twoD.fill();
+			};	
+		}		
+	</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5学堂 - H5course</title>
+	<link rel="stylesheet" href="../css/reset.css">
+	<style>
+		.wrap {
+			width: 700px;
+			margin: 100px auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrap">
+		<canvas id="canvas" width="700" height="400" style="border:2px solid #0026ff;"></canvas>
+	</div>
+	<script src = "../js/jquery-1.12.3.js"></script>
+	<script>
+		var c = document.getElementById('canvas');
+		var ctx = c.getContext("2d"); 
+		var data = [0.15, 0.15, 0.3, 0.1, 0.3];
+		var color = ['#f00', 'blue', 'yellow', 'pink', 'green'];
+		var percen = ['第1天', '第2天', '第3天', '第4天', '第五天'];
+		/*
+		 * 功能： 扇形统计
+		 * 参数：（ID, 2D, 比例，颜色，数量）
+		 * 调用方式：fan(c, ctx,data, color, percen);
+		*/
+		function fan(ele, twoD, perFig, Color, intr){
+			var radius = ele.height / 2 - 20; //半径
+			var rx = radius + 20;//圆心横轴
+			var ry = radius + 20;//圆心纵轴
+			var start = 0; //起始
+			var end = 0; //终止
+			var posX = rx *2 +50; //矩形横坐标
+			var posY = 30;
+			var testX = posX + 30; //文字的横坐标
+			var testY = posY + 10;
+			for (var i = 0; i < perFig.length; i++) {
+				//画圆形
+				end = end + perFig[i] * Math.PI * 2; //结束弧度
+				twoD.fillStyle = Color[i]; //设置颜色
+				twoD.beginPath(); //限制范围
+				twoD.moveTo(rx, ry); //移动到圆心
+				twoD.arc(rx, ry, radius, start, end, false); 
+				twoD.fill(); //填充颜色
+				start = end; //终止赋值给起始
+				//画矩形
+				twoD.fillStyle = Color[i];
+				twoD.fillRect(posX, posY + 20 * i, 30, 10); //定义矩形的位置
+				twoD.moveTo(posX, posY + 20 * i);
+				//添加文字
+				box  = intr[i] + ':' + parseInt(perFig[i] * 100) +' %' ;
+				twoD.font = '20px 宋体';
+				twoD.fillStyle = "black";
+				twoD.fillText(box, testX, testY + 20 * i);
+			};		
+		}
+		fan(c, ctx,data, color, percen);
+	</script>
+</body>
+</html>
